@@ -172,14 +172,19 @@ void StringChangeNext(stringCollection* string, char data) {
 void StringChangePrev(stringCollection* string, char data) {
     string->current->prevElement->value = data;
 }
-stringCollection StringMenu() {
+stringCollection StringMenu(stringCollection* stringPointer) {//add parameter
     int menuPointer = 0;
     int buffer;
     int isExist = 0;
     struct stringCollection string;
-    string.current = NULL;
-    string.head = NULL;
-    string.tail = NULL;
+    if (stringPointer != NULL) {
+        string = *stringPointer;
+    }
+    else {
+        string.current = NULL;
+        string.head = NULL;
+        string.tail = NULL;
+    }
     system("cls");
     while (menuPointer != 20) {
         menuPointer = 0;

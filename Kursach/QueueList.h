@@ -55,7 +55,7 @@ void QueueAddElement(queueCollection* queue) {
         struct queueElement* newElement;
         newElement = (struct queueElement*)malloc(sizeof(struct queueElement));
         if (newElement == NULL) { printf("Error, NULL\n"); exit(1); }
-        newElement->value = StringMenu();
+        newElement->value = StringMenu(NULL);
         newElement->prevElement = NULL;
         newElement->nextElement = NULL;
         queue->head = newElement;
@@ -65,12 +65,16 @@ void QueueAddElement(queueCollection* queue) {
         struct queueElement* newElement;
         newElement = (struct queueElement*)malloc(sizeof(struct queueElement));
         if (newElement == NULL) { printf("Error, NULL\n"); exit(1); }
-        newElement->value = StringMenu();
+        newElement->value = StringMenu(NULL);
         newElement->nextElement = queue->head;
         newElement->prevElement = NULL;
         queue->head->prevElement = newElement;
         queue->head = newElement;
     }
+}
+void QueueWatchHead(queueCollection* queue) {
+    printf("Started work with first element\n");
+    queue->head->value=StringMenu(&queue->head->value);
 }
 void QueueMenu() {
     int menuPointer = 0;
@@ -125,7 +129,7 @@ void QueueMenu() {
         case 5:
             system("cls");
             if (queue.head != NULL) {
-
+                QueueWatchHead(&queue);
                 printf("Work done, press enter to return\n");
             }
             else printf("Error, empty queue\n");
