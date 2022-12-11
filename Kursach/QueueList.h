@@ -86,7 +86,7 @@ void QueueMenu() {
         menuPointer = 0;
         int directionFlag = 0;
         system("cls");
-        printf("Menu\n");
+        printf("Queue Menu\n");
         printf("Select menu item\n");
         printf("1. Clear queue\n");
         printf("2. Check empty\n");

@@ -190,7 +190,7 @@ stringCollection StringMenu(stringCollection* stringPointer) {//add parameter
         menuPointer = 0;
         int directionFlag = 0;
         system("cls");
-        printf("Menu\n");
+        printf("String Menu\n");
         printf("Select menu item\n");
         printf("1. Clear string\n");
         printf("2. Check empty\n");
