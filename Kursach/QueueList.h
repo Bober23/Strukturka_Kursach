@@ -34,6 +34,19 @@ void QueueDeleteAll(queueCollection* queue) {
     queue->head = NULL;
     queue->tail = NULL;
 }
+void QueueDeleteTail(queueCollection* queue) {
+    queueElement* node = queue->tail;
+    if (queue->head != queue->tail) {
+        queue->tail = queue->tail->prevElement;
+    }
+    else {
+        queue->tail = NULL;
+        queue->head = NULL;
+    }
+    StringDeleteAll(&node->value);
+    free(node);
+}
+
 void QueueCheckEmpty(queueCollection* queue) {
     if (queue->head == NULL && queue->tail == NULL)
         printf("Queue is empty\n");
@@ -75,6 +88,14 @@ void QueueAddElement(queueCollection* queue) {
 void QueueWatchHead(queueCollection* queue) {
     printf("Started work with first element\n");
     queue->head->value=StringMenu(&queue->head->value);
+}
+void QueueWatchTail(queueCollection* queue) {
+    printf("Started work with first element\n");
+    queue->tail->value = StringMenu(&queue->tail->value);
+}
+void QueueInsert(queueCollection* queue) {
+    QueueWatchTail(queue);
+    QueueDeleteTail(queue);
 }
 void QueueMenu() {
     int menuPointer = 0;
@@ -122,8 +143,11 @@ void QueueMenu() {
             break;
         case 4:
             system("cls");
-
-            printf("Work done, press enter to return\n");
+            if (queue.tail != NULL) {
+                QueueInsert(&queue);
+                printf("Work done, press enter to return\n");
+            }
+            else printf("Error, empty queue\n");
             buffer = getchar();
             break;
         case 5:
@@ -137,8 +161,8 @@ void QueueMenu() {
             break;
         case 6:
             system("cls");
-            if (queue.head != NULL) {
-
+            if (queue.tail != NULL) {
+                QueueWatchTail(&queue);
                 printf("Work done, press enter to return\n");
             }
             else printf("Error, empty queue\n");

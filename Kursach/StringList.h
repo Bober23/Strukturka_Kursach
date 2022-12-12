@@ -68,17 +68,19 @@ void StringDeletePrev(stringCollection* string) {
     }
 }
 void StringDeleteAll(stringCollection* string) {
-    stringElement* node = string->head;
-    stringElement* badElement = node;
-    while (node->nextElement != NULL)
-    {
-        badElement = node;
-        node = node->nextElement;
-        free(badElement);
+    if (string->head != NULL) {
+        stringElement* node = string->head;
+        stringElement* badElement = node;
+        while (node->nextElement != NULL)
+        {
+            badElement = node;
+            node = node->nextElement;
+            free(badElement);
+        }
+        string->head = NULL;
+        string->current = NULL;
+        string->tail = NULL;
     }
-    string->head = NULL;
-    string->current = NULL;
-    string->tail = NULL;
 }
 int StringCheckEmpty(stringCollection* string) {
     if (string->head == NULL) {
