@@ -16,12 +16,6 @@ struct queueCollection {
     queueElement* head;
     queueElement* tail;
 };
-queueCollection QueueStartWork() {
-    queueCollection queue;
-    queue.head = NULL;
-    queue.tail = NULL;
-    return queue;
-}
 void QueueDeleteAll(queueCollection* queue) {
     queueElement* node = queue->head;
     queueElement* badElement = node;
@@ -103,19 +97,29 @@ void QueueChangeTail(queueCollection* queue) {
 void QueuePrint(queueCollection* queue) {
     queueElement* current = queue->head;
     int counter = 0;
+    printf("/*| End |*\\ \n");
     while (current != NULL) {
-        printf("[%d]: ", counter);
+        printf("    ");
         PrintList(current->value);
         counter++;
         current = current->nextElement;
     }
+    
+    printf("/*| Start |*\\\n");
 }
-void QueueMenu() {
+queueCollection QueueMenu(queueCollection* queuePointer) {
     int menuPointer = 0;
     int buffer;
     int isExist = 0;
     int flagCreate = 0;
-    queueCollection queue = QueueStartWork();
+    struct queueCollection queue;
+    if (queuePointer != NULL) {
+        queue = *queuePointer;
+    }
+    else {
+        queue.head = NULL;
+        queue.tail = NULL;
+    }
     system("cls");
     while (menuPointer != 9) {
         menuPointer = 0;
@@ -226,6 +230,7 @@ void QueueMenu() {
             break;
         }
     }
-    if (queue.head != NULL)
-        QueueDeleteAll(&queue); //если выход
+    //if (queue.head != NULL)
+      //  QueueDeleteAll(&queue); //если выход
+    return queue;
 }

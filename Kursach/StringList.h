@@ -117,7 +117,7 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
     while (menuPointer != 12) {
         menuPointer = 0;
         system("cls");
-        printf("Menu\n");
+        printf("Sentense Menu\n");
         printf("Select menu item\n");
         printf("1. Clear list\n");
         printf("2. Check empty\n");

@@ -132,6 +132,7 @@
   <ItemGroup>
     <ClInclude Include="MyString.h" />
     <ClInclude Include="QueueList.h" />
+    <ClInclude Include="Sequence.h" />
     <ClInclude Include="StringList.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
