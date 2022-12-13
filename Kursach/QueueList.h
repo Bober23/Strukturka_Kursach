@@ -8,7 +8,7 @@
 
 struct queueElement
 {
-    stringCollection value;
+    listCollection value;
     queueElement* nextElement = NULL;
     queueElement* prevElement = NULL;
 };
@@ -38,12 +38,13 @@ void QueueDeleteTail(queueCollection* queue) {
     queueElement* node = queue->tail;
     if (queue->head != queue->tail) {
         queue->tail = queue->tail->prevElement;
+        queue->tail->nextElement = NULL;
     }
     else {
         queue->tail = NULL;
         queue->head = NULL;
     }
-    StringDeleteAll(&node->value);
+    ListDeleteAll(&node->value);
     free(node);
 }
 
@@ -61,6 +62,7 @@ int QueueSize(queueCollection* queue) {
         current = current->nextElement;
         counter++;
     }
+    
     return counter;
 }
 void QueueAddElement(queueCollection* queue) {
@@ -68,7 +70,7 @@ void QueueAddElement(queueCollection* queue) {
         struct queueElement* newElement;
         newElement = (struct queueElement*)malloc(sizeof(struct queueElement));
         if (newElement == NULL) { printf("Error, NULL\n"); exit(1); }
-        newElement->value = StringMenu(NULL);
+        newElement->value = ListMenu(NULL);
         newElement->prevElement = NULL;
         newElement->nextElement = NULL;
         queue->head = newElement;
@@ -78,32 +80,44 @@ void QueueAddElement(queueCollection* queue) {
         struct queueElement* newElement;
         newElement = (struct queueElement*)malloc(sizeof(struct queueElement));
         if (newElement == NULL) { printf("Error, NULL\n"); exit(1); }
-        newElement->value = StringMenu(NULL);
+        newElement->value = ListMenu(NULL);
         newElement->nextElement = queue->head;
         newElement->prevElement = NULL;
         queue->head->prevElement = newElement;
         queue->head = newElement;
     }
 }
-void QueueWatchHead(queueCollection* queue) {
-    printf("Started work with first element\n");
-    queue->head->value=StringMenu(&queue->head->value);
-}
+
 void QueueWatchTail(queueCollection* queue) {
-    printf("Started work with first element\n");
-    queue->tail->value = StringMenu(&queue->tail->value);
+    printf("Element: ");
+    PrintList(queue->tail->value);
 }
 void QueueInsert(queueCollection* queue) {
     QueueWatchTail(queue);
     QueueDeleteTail(queue);
 }
+void QueueChangeTail(queueCollection* queue) {
+    printf("Started work with first element\n");
+    queue->tail->value = ListMenu(&queue->tail->value);
+}
+void QueuePrint(queueCollection* queue) {
+    queueElement* current = queue->head;
+    int counter = 0;
+    while (current != NULL) {
+        printf("[%d]: ", counter);
+        PrintList(current->value);
+        counter++;
+        current = current->nextElement;
+    }
+}
 void QueueMenu() {
     int menuPointer = 0;
     int buffer;
     int isExist = 0;
+    int flagCreate = 0;
     queueCollection queue = QueueStartWork();
     system("cls");
-    while (menuPointer != 7) {
+    while (menuPointer != 9) {
         menuPointer = 0;
         int directionFlag = 0;
         system("cls");
@@ -112,11 +126,17 @@ void QueueMenu() {
         printf("1. Clear queue\n");
         printf("2. Check empty\n");
         printf("3. Add new element\n");
-        printf("4. Insert element\n");
+        printf("4. Insert first element\n");
         printf("5. Watch first element\n");
-        printf("6. Watch last element\n");
-        printf("7. Return\n");
+        printf("6. Delete first element\n");
+        printf("7. Change first element\n");
+        printf("8. Print queue\n");
+        printf("9. Return\n");
         printf("\nQueue contains %d elements\n", QueueSize(&queue));
+        if (QueueSize(&queue) != 0) {
+            printf("Queue:\n");
+            QueuePrint(&queue);
+        }
         scanf_s("%d", &menuPointer);
         buffer = getchar();//мусор
         switch (menuPointer)
@@ -136,10 +156,25 @@ void QueueMenu() {
             buffer = getchar();
             break;
         case 3:
-            system("cls");
-            QueueAddElement(&queue);
-            printf("Work done, press enter to return\n");
-            buffer = getchar();
+            flagCreate = 0;
+            while (flagCreate != 1 && flagCreate != 2) {
+                system("cls");
+                printf("You want to make new list and start work with it?\n");
+                printf("1. Create list and start work\n");
+                printf("2. Return to queue menu\n");
+                scanf_s("%d", &flagCreate);
+                if (flagCreate == 1) {
+                    QueueAddElement(&queue);
+                    printf("Work done, press enter to return\n");
+                    buffer = getchar();
+                }
+                else if (flagCreate != 2) {
+                    printf("Input correct number\n");
+                    buffer = getchar();
+                    buffer = getchar();
+                }
+
+            }
             break;
         case 4:
             system("cls");
@@ -153,7 +188,7 @@ void QueueMenu() {
         case 5:
             system("cls");
             if (queue.head != NULL) {
-                QueueWatchHead(&queue);
+                QueueWatchTail(&queue);
                 printf("Work done, press enter to return\n");
             }
             else printf("Error, empty queue\n");
@@ -162,7 +197,25 @@ void QueueMenu() {
         case 6:
             system("cls");
             if (queue.tail != NULL) {
-                QueueWatchTail(&queue);
+                QueueDeleteTail(&queue);
+                printf("Work done, press enter to return\n");
+            }
+            else printf("Error, empty queue\n");
+            buffer = getchar();
+            break;
+        case 7:
+            system("cls");
+            if (queue.tail != NULL) {
+                QueueChangeTail(&queue);
+                printf("Work done, press enter to return\n");
+            }
+            else printf("Error, empty queue\n");
+            buffer = getchar();
+            break;
+        case 8:
+            system("cls");
+            if (queue.tail != NULL) {
+                QueuePrint(&queue);
                 printf("Work done, press enter to return\n");
             }
             else printf("Error, empty queue\n");

@@ -130,6 +130,7 @@
     <ClCompile Include="Kursach.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="MyString.h" />
     <ClInclude Include="QueueList.h" />
     <ClInclude Include="StringList.h" />
   </ItemGroup>
