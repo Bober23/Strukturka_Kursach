@@ -1,22 +1,25 @@
+//верхний уровень
+//последовательность на двусвязном списке
+//хранит очереди
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
 #include "QueueList.h"
 
-struct sequenceElement
+struct sequenceElement //объявляем структуру элементов последовательности
 {
     queueCollection value;
     sequenceElement* nextElement = NULL;
     sequenceElement* prevElement = NULL;
 };
-struct sequenceCollection {
+struct sequenceCollection { //объявляем структуру последовательности
     sequenceElement* head;
     sequenceElement* current;
     sequenceElement* tail;
 };
 
 
-void PrintSequence(sequenceCollection* sequence) {
+void PrintSequence(sequenceCollection* sequence) { //функция принимает на вход указатель на последовательность, печатает последовательность
     sequenceElement* current = sequence->head;
     int counter = 0;
     while (current != NULL) {
@@ -24,13 +27,13 @@ void PrintSequence(sequenceCollection* sequence) {
         if (current == sequence->current)
             printf("<--");
         printf("\n");
-        QueuePrint(&current->value);
+        QueuePrint(&current->value); //вызов функции печати очереди
         counter++;
         current = current->nextElement;
     }
     
 }
-void DeleteAll(sequenceCollection* sequence) {
+void DeleteAll(sequenceCollection* sequence) {  //принимает на вход указатель на последовательность, удаляет ее
     sequenceElement* node = sequence->head;
     sequenceElement* badElement = node;
     while (node->nextElement != NULL)
@@ -44,16 +47,16 @@ void DeleteAll(sequenceCollection* sequence) {
     sequence->current = NULL;
     sequence->tail = NULL;
 }
-sequenceCollection StartWork() {
+sequenceCollection StartWork() {  //создает последовательность, возвращает ее
     sequenceCollection sequence;
     sequence.current = NULL;
     sequence.head = NULL;
     sequence.tail = NULL;
     return sequence;
 
-}
-int CheckEmpty(sequenceCollection* sequence) {
-    if (sequence->head == NULL) {
+} 
+int CheckEmpty(sequenceCollection* sequence) { //принимает на вход указатель на последовательность, проверяет пустоту
+    if (sequence->head == NULL) {              //возвращает 1 если пусто, 0 если не пусто
         printf("Sequence is empty\n");
         return 1;
     }
@@ -62,43 +65,43 @@ int CheckEmpty(sequenceCollection* sequence) {
         return 0;
     }
 }
-void CheckWatched(sequenceCollection* sequence) {
+void CheckWatched(sequenceCollection* sequence) { //принимает на вход последовательность, проверяет, прочитана ли последовательность полностью
     if (sequence->current->nextElement == NULL) {
         printf("YES\n");
     }
     else printf("NO\n");
 }
-void MovePointerToStart(sequenceCollection* sequence) {
+void MovePointerToStart(sequenceCollection* sequence) { //принимает на вход указатель на последовательность, двигает указатель в начало
     sequence->current = sequence->head;
 }
-void AddElement(sequenceCollection* collection) {
+void AddElement(sequenceCollection* collection) { //принимает на вход указатель на последовательность, создает очередь и добавляет ее в конец последовательности
     struct sequenceElement* current;
     current = (struct sequenceElement*)malloc(sizeof(struct sequenceElement));
     if (current == NULL) { printf("Error, NULL\n"); exit(1); }
     current->value = QueueMenu(NULL);
     current->nextElement = NULL;
     current->prevElement = NULL;
-    if (collection->head == NULL) {
+    if (collection->head == NULL) { //если последовательность пустая
         collection->head = current;
         collection->current = current;
         collection->tail = current;
     }
-    else {
+    else { //если не пустая
         collection->tail->nextElement = current;
         current->prevElement = collection->tail;
         collection->tail = current;
     }
 }
-void MovePointerForvard(sequenceCollection* sequence) {
+void MovePointerForvard(sequenceCollection* sequence) { //принимает на вход указатель на последовательность, двигает ее рабочий указатель вперед
     sequence->current = sequence->current->nextElement;
 }
-void CheckCurrent(sequenceCollection* sequence) {
+void CheckCurrent(sequenceCollection* sequence) { //принимает на вход указатель на последовательность, печатает значение элемента, на который указывает рабочий указатель
     QueuePrint(&sequence->current->value);
 }
-void ChangeCurrent(sequenceCollection* sequence) {
+void ChangeCurrent(sequenceCollection* sequence) { //принимает на вход указатель на последовательность, изменяет значение элемента, на который указывает рабочий указатель
     sequence->current->value= QueueMenu(&sequence->current->value);
 }
-int SequenceSize(sequenceCollection* sequence) {
+int SequenceSize(sequenceCollection* sequence) { //принимает на вход указатель на последовательность, возвращает количество элементов последовательности
     sequenceElement* current = sequence->head;
     int counter = 0;
     while (current != NULL) {
@@ -108,7 +111,7 @@ int SequenceSize(sequenceCollection* sequence) {
 
     return counter;
 }
-void SequenceMenu(sequenceCollection sequence) {
+void SequenceMenu(sequenceCollection sequence) { //меню последовательности
     int menuPointer = 0;
     int buffer;
     int isExist = 0;
@@ -117,21 +120,21 @@ void SequenceMenu(sequenceCollection sequence) {
         menuPointer = 0;
         int flagCreate = 0;
         system("cls");
-        printf("Menu\n");
+        printf("Sequence Menu\n");
         printf("Select menu item\n");
-        printf("1. Clear sequence\n"); //!
-        printf("2. Check empty\n"); //!
+        printf("1. Clear sequence\n");
+        printf("2. Check empty\n");
         printf("3. Set pointer to head\n");
         printf("4. Check no unwatched elements\n");
         printf("5. Skip element\n");
         printf("6. Check element\n");
         printf("7. Change element\n");
-        printf("8. Add new element\n");    //!
+        printf("8. Add new element\n");
         printf("9. Print sequence\n");
         printf("10. Read element\n");
         printf("11. Delete sequence and exit\n");
         printf("\nSequence contains %d elements\n", SequenceSize(&sequence));
-        if (sequence.head != NULL) {
+        if (sequence.head != NULL) { //если последовательность не пустая, то печатаем ее
             printf("Sequence: \n");
             PrintSequence(&sequence);
         }
@@ -139,7 +142,7 @@ void SequenceMenu(sequenceCollection sequence) {
         buffer = getchar();//мусор
         switch (menuPointer)
         {
-        case 1:
+        case 1: //если выбрано действие "Очистить последовательность"
             system("cls");
             if (sequence.head != NULL) {
                 DeleteAll(&sequence);
@@ -147,19 +150,19 @@ void SequenceMenu(sequenceCollection sequence) {
             printf("Work done, press enter to return\n");
             buffer = getchar();
             break;
-        case 2:
+        case 2: //если выбрано действие "Проверить пустоту последовательности"
             system("cls");
             CheckEmpty(&sequence);
             printf("Work done, press enter to return\n");
             buffer = getchar();
             break;
-        case 3:
+        case 3: //если выбрано действие "Установить указатель в начало"
             system("cls");
             MovePointerToStart(&sequence);
             printf("Work done, press enter to return\n");
             buffer = getchar();
             break;
-        case 4:
+        case 4: //если выбрано действие "Проверить наличие непросмотренных элементов"
             system("cls");
             if (sequence.head != NULL) {
                 CheckWatched(&sequence);
@@ -168,7 +171,7 @@ void SequenceMenu(sequenceCollection sequence) {
             else printf("Error, empty sequence\n");
             buffer = getchar();
             break;
-        case 5:
+        case 5: //если выбрано действие "Пропустить элемент"
             system("cls");
             if (sequence.head != NULL) {
                 if (sequence.current->nextElement != NULL) {
@@ -180,7 +183,7 @@ void SequenceMenu(sequenceCollection sequence) {
             else printf("Error, sequence empty");
             buffer = getchar();
             break;
-        case 6:
+        case 6: //если выбрано действие "Посмотреть элемент"
             system("cls");
             if (sequence.head != NULL) {
                 CheckCurrent(&sequence);
@@ -189,17 +192,16 @@ void SequenceMenu(sequenceCollection sequence) {
             else printf("Error, empty sequence\n");
             buffer = getchar();
             break;
-        case 7:
+        case 7: //если выбрано действие "Изменить элемент"
             system("cls");
             if (sequence.head != NULL) {
                 ChangeCurrent(&sequence);
                 printf("Work done, press enter to return\n");
-                buffer = getchar();
             }
             else printf("Error, empty sequence\n");
             buffer = getchar();
             break;
-        case 8:
+        case 8: //если выбрано действие "Добавить элемент"
             flagCreate = 0;
             while (flagCreate != 1 && flagCreate != 2) {
                 system("cls");
@@ -220,7 +222,7 @@ void SequenceMenu(sequenceCollection sequence) {
 
             }
             break;
-        case 9:
+        case 9: //если выбрано действие "Напечатать последовательность"
             system("cls");
             if (sequence.head != NULL) {
                 PrintSequence(&sequence);
@@ -229,7 +231,7 @@ void SequenceMenu(sequenceCollection sequence) {
             else printf("Error, sequence is empty\n");
             buffer = getchar();
             break;
-        case 10:
+        case 10: //если выбрано действие "Прочитать элемент"
             system("cls");
             if (sequence.head != NULL) {
                 if (sequence.current->nextElement != NULL) {

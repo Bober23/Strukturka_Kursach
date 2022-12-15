@@ -1,6 +1,6 @@
-//нижний уровень
+//средний уровень
 //очередь, реализованная на двухсвязном списке
-//хранит строки
+//хранит предложения
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
@@ -135,7 +135,7 @@ queueCollection QueueMenu(queueCollection* queuePointer) {
         printf("6. Delete first element\n");
         printf("7. Change first element\n");
         printf("8. Print queue\n");
-        printf("9. Return\n");
+        printf("9. Return to sequence menu\n");
         printf("\nQueue contains %d elements\n", QueueSize(&queue));
         if (QueueSize(&queue) != 0) {
             printf("Queue:\n");
