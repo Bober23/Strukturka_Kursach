@@ -15,6 +15,7 @@ struct queueElement
 struct queueCollection {
     queueElement* head;
     queueElement* tail;
+    int size = 0;
 };
 void QueueDeleteAll(queueCollection* queue) {
     queueElement* node = queue->head;
@@ -23,6 +24,7 @@ void QueueDeleteAll(queueCollection* queue) {
     {
         badElement = node;
         node = node->nextElement;
+        ListDeleteAll(&badElement->value);
         free(badElement);
     }
     queue->head = NULL;
@@ -112,13 +114,19 @@ queueCollection QueueMenu(queueCollection* queuePointer) {
     int buffer;
     int isExist = 0;
     int flagCreate = 0;
+    int queueSize = 0;
     struct queueCollection queue;
     if (queuePointer != NULL) {
         queue = *queuePointer;
+        queueSize = QueueSize(&queue);
     }
     else {
         queue.head = NULL;
         queue.tail = NULL;
+        system("cls");
+        printf("Input queue size\n");
+        scanf_s("%d", &queue.size);
+        queueSize = 0;
     }
     system("cls");
     while (menuPointer != 9) {
@@ -136,6 +144,7 @@ queueCollection QueueMenu(queueCollection* queuePointer) {
         printf("7. Change first element\n");
         printf("8. Print queue\n");
         printf("9. Return to sequence menu\n");
+        printf("\nQueue size = %d\n",queue.size);
         printf("\nQueue contains %d elements\n", QueueSize(&queue));
         if (QueueSize(&queue) != 0) {
             printf("Queue:\n");
@@ -161,23 +170,29 @@ queueCollection QueueMenu(queueCollection* queuePointer) {
             break;
         case 3:
             flagCreate = 0;
-            while (flagCreate != 1 && flagCreate != 2) {
-                system("cls");
-                printf("You want to make new list and start work with it?\n");
-                printf("1. Create list and start work\n");
-                printf("2. Return to queue menu\n");
-                scanf_s("%d", &flagCreate);
-                if (flagCreate == 1) {
-                    QueueAddElement(&queue);
-                    printf("Work done, press enter to return\n");
-                    buffer = getchar();
+            if(queueSize<queue.size){
+                while (flagCreate != 1 && flagCreate != 2) {
+                    system("cls");
+                    printf("You want to make new list and start work with it?\n");
+                    printf("1. Create list and start work\n");
+                    printf("2. Return to queue menu\n");
+                    scanf_s("%d", &flagCreate);
+                    if (flagCreate == 1) {
+                        queueSize++;
+                        QueueAddElement(&queue);
+                        printf("Work done, press enter to return\n");
+                        buffer = getchar();
+                    }
+                    else if (flagCreate != 2) {
+                        printf("Input correct number\n");
+                        buffer = getchar();
+                        buffer = getchar();
+                    }
                 }
-                else if (flagCreate != 2) {
-                    printf("Input correct number\n");
-                    buffer = getchar();
-                    buffer = getchar();
-                }
-
+            }
+            else {
+                printf("Error, queue overflow");
+                buffer = getchar();
             }
             break;
         case 4:
@@ -202,6 +217,7 @@ queueCollection QueueMenu(queueCollection* queuePointer) {
             system("cls");
             if (queue.tail != NULL) {
                 QueueDeleteTail(&queue);
+                queueSize--;
                 printf("Work done, press enter to return\n");
             }
             else printf("Error, empty queue\n");

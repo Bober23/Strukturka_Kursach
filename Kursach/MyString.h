@@ -17,6 +17,7 @@ char* StringInput() {
 		if (string == NULL) { printf("Error, NULL\n"); exit(1); }
 	}
 	string[counter] = '\0';
+	while ('\n' != getchar());  //защита от дурака
 	return string;
 }
 void StringOutput(char* string) {
