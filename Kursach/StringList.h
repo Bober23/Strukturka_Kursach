@@ -36,6 +36,23 @@ void PrintList(listCollection collection) {
     }
     else printf("\n");
 }
+void PrintListReversed(listCollection collection) {
+    listElement* node = collection.tail;
+    if (node != NULL) {
+        while (1) {
+            StringOutput(node->value);
+            if (node == collection.current)
+                printf("*");
+            printf(" ");
+            node = node->prevElement;
+            if (node == NULL) {
+                printf("\n");
+                break;
+            }
+        }
+    }
+    else printf("\n");
+}
 void ListDeleteNext(listCollection* list) {
     if (list->current->nextElement->nextElement != NULL) {
         listElement* badNode = list->current->nextElement;
@@ -207,6 +224,7 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
         printf("17. Extract prev element\n");
         printf("18. Change prev element\n");
         printf("19. Return to queue menu\n");
+        printf("20. Print reversed list\n");
         printf("\nList: \n");
         if (list.head != NULL)
             PrintList(list);
@@ -410,6 +428,15 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
                     printf("Error, start of list\n");
             }
             else printf("Error, empty list\n");
+            buffer = getchar();
+            break;
+        case 20:
+            system("cls");
+            if (list.head != NULL) {
+                PrintListReversed(list);
+                printf("Work done, press enter button to return\n");
+            }
+            else printf("Error, list is empty\n");
             buffer = getchar();
             break;
         default:
