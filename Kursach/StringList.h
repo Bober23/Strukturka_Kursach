@@ -57,6 +57,7 @@ void ListDeleteNext(listCollection* list) {
     if (list->current->nextElement->nextElement != NULL) {
         listElement* badNode = list->current->nextElement;
         list->current->nextElement = list->current->nextElement->nextElement;
+        list->current->nextElement->prevElement = list->current;
         free(badNode);
     }
     else {
@@ -68,6 +69,7 @@ void ListDeletePrev(listCollection* list) {
     if (list->current->prevElement->prevElement != NULL) {
         listElement* badNode = list->current->prevElement;
         list->current->prevElement = list->current->prevElement->prevElement;
+        list->current->prevElement->nextElement = list->current;
         free(badNode);
     }
     else { 

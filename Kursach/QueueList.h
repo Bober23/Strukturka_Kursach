@@ -158,6 +158,7 @@ queueCollection QueueMenu(queueCollection* queuePointer) {
             system("cls");
             if (queue.head != NULL) {
                 QueueDeleteAll(&queue);
+                queueSize = 0;
             }
             printf("Work done, press enter to return\n");
             buffer = getchar();
