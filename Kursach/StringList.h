@@ -90,6 +90,7 @@ void ListDeleteAll(listCollection* list) {
     }
     list->head = NULL;
     list->current = NULL;
+    list->tail = NULL;
 }
 int ListCheckEmpty(listCollection* list) {
     if (list->head == NULL) {
