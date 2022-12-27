@@ -6,14 +6,14 @@
 #include "string.h"
 #include "QueueList.h"
 
-struct sequenceElement //объ€вл€ем структуру элементов последовательности
+struct sequenceElement //структура элементов последовательности
 {
-    queueCollection value;
-    sequenceElement* nextElement = NULL;
+    queueCollection value; //значение элемента последовательности
+    sequenceElement* nextElement = NULL; //указатель на следующий элемент
 };
-struct sequenceCollection { //объ€вл€ем структуру последовательности
-    sequenceElement* head;
-    sequenceElement* current;
+struct sequenceCollection { //структура последовательности
+    sequenceElement* head; //указатель на первый элемент последовательности
+    sequenceElement* current; //рабочий указатель
 };
 
 
@@ -116,7 +116,7 @@ void SequenceMenu(sequenceCollection sequence) { //меню последовательности
     while (menuPointer != 11) {
         menuPointer = 0;
         int flagCreate = 0;
-        system("cls");
+        system("cls");  //графический интерфейс
         printf("Sequence Menu\n");
         printf("Select menu item\n");
         printf("1. Clear sequence\n");

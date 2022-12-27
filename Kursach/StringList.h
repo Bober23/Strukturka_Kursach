@@ -6,20 +6,20 @@
 #include "string.h"
 #include "MyString.h"
 
-struct listElement
+struct listElement //структура элемента предложения
 {
-    char* value;
-    listElement* nextElement = NULL;
-    listElement* prevElement = NULL;
+    char* value; //значение элемента предложения
+    listElement* nextElement = NULL; //указатель на следующий элемент предложения
+    listElement* prevElement = NULL; //указатель на предыдущий элемент предложения
 };
-struct listCollection {
-    listElement* head;
-    listElement* current;
-    listElement* tail;
+struct listCollection { //структура предложения
+    listElement* head; //указатель на начало предложения
+    listElement* current; //рабочий указатель
+    listElement* tail; //указатель на конец предложения
 };
 
 
-void PrintList(listCollection collection) {
+void PrintList(listCollection collection) {  //Функция принимает на вход предложение, печатает его
     listElement* node = collection.head;
     if (node != NULL) {
         while (1) {
@@ -36,7 +36,7 @@ void PrintList(listCollection collection) {
     }
     else printf("\n");
 }
-void PrintListReversed(listCollection collection) {
+void PrintListReversed(listCollection collection) { //Функция принимает на вход предложение, печатает его наоборот
     listElement* node = collection.tail;
     if (node != NULL) {
         while (1) {
@@ -53,7 +53,7 @@ void PrintListReversed(listCollection collection) {
     }
     else printf("\n");
 }
-void ListDeleteNext(listCollection* list) {
+void ListDeleteNext(listCollection* list) {  //Функция принимает на вход указатель на предложение, удаляет элемент после рабочего указателя
     if (list->current->nextElement->nextElement != NULL) {
         listElement* badNode = list->current->nextElement;
         list->current->nextElement = list->current->nextElement->nextElement;
@@ -65,7 +65,7 @@ void ListDeleteNext(listCollection* list) {
         list->tail = list->current;
     }
 }
-void ListDeletePrev(listCollection* list) {
+void ListDeletePrev(listCollection* list) {  //Функция принимает на вход указатель на предложение, удаляет элемент перед рабочим указателем
     if (list->current->prevElement->prevElement != NULL) {
         listElement* badNode = list->current->prevElement;
         list->current->prevElement = list->current->prevElement->prevElement;
@@ -77,7 +77,7 @@ void ListDeletePrev(listCollection* list) {
         list->head = list->current;
     }
 }
-void ListDeleteAll(listCollection* list) {
+void ListDeleteAll(listCollection* list) {  //Функция принимает на вход указатель на предложение, очищает его
     listElement* node = list->head;
     listElement* badElement = node;
     if (node != NULL) {
@@ -92,7 +92,7 @@ void ListDeleteAll(listCollection* list) {
     list->current = NULL;
     list->tail = NULL;
 }
-int ListCheckEmpty(listCollection* list) {
+int ListCheckEmpty(listCollection* list) {  //Функция принимает на вход указатель на предложение,  проверяет, является ли оно пустым
     if (list->head == NULL) {
         printf("List is empty\n");
         return 1;
@@ -102,25 +102,25 @@ int ListCheckEmpty(listCollection* list) {
         return 0;
     }
 }
-void ListCheckPointerOnEnd(listCollection* list) {
+void ListCheckPointerOnEnd(listCollection* list) {  //Функция принимает на вход указатель на предложение,  проверяет, находится ли рабочий указатель в конце
     if (list->current->nextElement == NULL) {
         printf("YES\n");
     }
     else printf("NO\n");
 }
-void ListCheckPointerOnStart(listCollection* list) {
+void ListCheckPointerOnStart(listCollection* list) {  //Функция принимает на вход указатель на предложение,  проверяет, находится ли рабочий указатель в начале
     if (list->current->prevElement == NULL) {
         printf("YES\n");
     }
     else printf("NO\n");
 }
-void ListMovePointerToStart(listCollection* list) {
+void ListMovePointerToStart(listCollection* list) {  //Функция принимает на вход указатель на предложение, ставит рабочий указатель в начало
     list->current = list->head;
 }
-void ListMovePointerToEnd(listCollection* list) {
+void ListMovePointerToEnd(listCollection* list) {  //Функция принимает на вход указатель на предложение, ставит рабочий указатель в конец
     list->current = list->tail;
 }
-void ListAddElement(listCollection* collection, char* data, int directionFlag) {
+void ListAddElement(listCollection* collection, char* data, int directionFlag) {  //Функция принимает на вход указатель на предложение, символьную строку и флаг направления, добавляет новое слово в предложение перед рабочим указателем, если directionFlag = 1 и после рабочего указателя, если directionFlag = 2
     struct listElement* current;
     current = (struct listElement*)malloc(sizeof(struct listElement));
     if (current == NULL) { printf("Error, NULL\n"); exit(1); }
@@ -129,17 +129,17 @@ void ListAddElement(listCollection* collection, char* data, int directionFlag) {
     current->prevElement = NULL;
     //Если выбран Before
     if (directionFlag == 1) {
-        if (collection->head == NULL) {
+        if (collection->head == NULL) {  //если предложение пустое
             collection->head = current;
             collection->current = current;
             collection->tail = current;
         }
-        else if (collection->current->prevElement == NULL) {
+        else if (collection->current->prevElement == NULL) {  //если указатель в начале
             current->nextElement = collection->current;
             collection->current->prevElement = current;
             collection->head = current;
         }
-        else {
+        else {  //если предложение не пустое и указатель не в начале
             current->prevElement = collection->current->prevElement;
             current->nextElement = collection->current;
             collection->current->prevElement->nextElement = current;
@@ -147,18 +147,18 @@ void ListAddElement(listCollection* collection, char* data, int directionFlag) {
         }
     }
     //Если выбран After
-    else if (directionFlag == 2) { //если выбран пункт after
-        if (collection->head == NULL) {
+    else if (directionFlag == 2) { 
+        if (collection->head == NULL) {  //если предложение пустое
             collection->head = current;
             collection->current = current;
             collection->tail = current;
         }
-        else if (collection->current->nextElement == NULL) {
+        else if (collection->current->nextElement == NULL) {  //если указатель в конце
             current->prevElement = collection->current;
             collection->current->nextElement = current;
             collection->tail = current;
         }
-        else {
+        else {  //если предложение не пустое и указатель не в конце
             current->nextElement = collection->current->nextElement;
             current->prevElement = collection->current;
             collection->current->nextElement->prevElement = current;
@@ -166,38 +166,38 @@ void ListAddElement(listCollection* collection, char* data, int directionFlag) {
         }
     }
 }
-void ListMovePointerForvard(listCollection* list) {
+void ListMovePointerForvard(listCollection* list) {  //Функция принимает на вход указатель на предложение, двигает рабочий указатель вперед
     list->current = list->current->nextElement;
 }
-void ListMovePointerBack(listCollection* list) {
+void ListMovePointerBack(listCollection* list) {  //Функция принимает на вход указатель на предложение, двигает рабочий указатель назад
     list->current = list->current->prevElement;
 }
-void ListCheckNext(listCollection* list) {
+void ListCheckNext(listCollection* list) {  //Функция принимает на вход указатель на предложение, печатает следующий элемент
     printf("Next element is:\n");
     StringOutput(list->current->nextElement->value);
     printf("\n");
 }
-void ListCheckPrev(listCollection* list) {
+void ListCheckPrev(listCollection* list) {  //Функция принимает на вход указатель на предложение, печатает предыдущий элемент
     printf("Prev element is:\n");
     StringOutput(list->current->prevElement->value);
     printf("\n");
 }
-void ListChangeNext(listCollection* list, char* data) {
+void ListChangeNext(listCollection* list, char* data) {  //Функция принимает на вход указатель на предложение и символьную строку, заменяет значение элемента после указателя на эту строку
     list->current->nextElement->value = data;
 }
-void ListChangePrev(listCollection* list, char* data) {
+void ListChangePrev(listCollection* list, char* data) {  //Функция принимает на вход указатель на предложение и символьную строку, заменяет значение элемента до указателя на эту строку
     list->current->prevElement->value = data;
 }
-listCollection ListMenu(listCollection* listPointer) {//add parameter
+listCollection ListMenu(listCollection* listPointer) {//Меню работы с предложением, принимает на вход указатель на предложение, если работает с уже созданным предложением и NULL, если предложение было только что создано. После завершения работы возвращает предложение
     int menuPointer = 0;
     int buffer;
     int isExist = 0;
     int directionFlag;
     struct listCollection list;
-    if (listPointer != NULL) {
+    if (listPointer != NULL) {  //если предложение уже создано
         list = *listPointer;
     }
-    else {
+    else {  //если предложение нужно создать
         list.current = NULL;
         list.head = NULL;
         list.tail = NULL;
@@ -205,7 +205,7 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
     system("cls");
     while (menuPointer != 19) {
         menuPointer = 0;
-        system("cls");
+        system("cls");  //графический интерфейс
         printf("Sentense Menu\n");
         printf("Select menu item\n");
         printf("1. Clear list\n");
@@ -229,14 +229,14 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
         printf("19. Return to queue menu\n");
         printf("20. Print reversed list\n");
         printf("\nList: \n");
-        if (list.head != NULL)
+        if (list.head != NULL)  //печать предложения
             PrintList(list);
         else printf("List is Empty\n");
         scanf_s("%d", &menuPointer);
         buffer = getchar();//мусор
         switch (menuPointer)
         {
-        case 1:
+        case 1:  //если выбран пункт очистить предложение
             system("cls");
             if (list.head != NULL) {
                 ListDeleteAll(&list);
@@ -244,19 +244,19 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
             printf("Work done, press enter to return\n");
             buffer = getchar();
             break;
-        case 2:
+        case 2:  //если выбран пункт проверить пустоту
             system("cls");
             ListCheckEmpty(&list);
             printf("Work done, press enter to return\n");
             buffer = getchar();
             break;
-        case 3:
+        case 3:  //если выбран пункт поставить указатель в начало 
             system("cls");
             ListMovePointerToStart(&list);
             printf("Work done, press enter to return\n");
             buffer = getchar();
             break;
-        case 4:
+        case 4:  //если выбран пункт проверить в конце ли указатель
             system("cls");
             if (list.head != NULL) {
                 ListCheckPointerOnEnd(&list);
@@ -265,7 +265,7 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
             else printf("Error, empty list\n");
             buffer = getchar();
             break;
-        case 5:
+        case 5:  //если выбран пункт подвинуть указатель вперед
             system("cls");
             if (list.head != NULL) {
                 if (list.current->nextElement != NULL) {
@@ -277,7 +277,7 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
             else printf("Error, list empty");
             buffer = getchar();
             break;
-        case 6:
+        case 6:  //елси выбран пункт посмотреть следующий элемент
             system("cls");
             if (list.head != NULL) {
                 if (list.current->nextElement != NULL) {
@@ -289,7 +289,7 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
             else printf("Error, empty list\n");
             buffer = getchar();
             break;
-        case 7:
+        case 7:  //если выбран пункт удалить следующий элемент
             system("cls");
             if (list.head != NULL) {
                 if (list.current->nextElement != NULL) {
@@ -301,7 +301,7 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
             else printf("Error, empty list\n");
             buffer = getchar();
             break;
-        case 8:
+        case 8:  //если выбран пункт извлечь следующий элемент
             system("cls");
             if (list.head != NULL) {
                 if (list.current->nextElement != NULL) {
@@ -314,7 +314,7 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
             else printf("Error, empty list\n");
             buffer = getchar();
             break;
-        case 9:
+        case 9:  //если выбран пункт изменить следующий элемент
             system("cls");
             if (list.head != NULL) {
                 if (list.current->nextElement != NULL) {
@@ -329,23 +329,23 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
             else printf("Error, empty list\n");
             buffer = getchar();
             break;
-        case 10:
+        case 10:  //добавление элемента
             system("cls");
             char* inputElement;
             directionFlag = 0;
-            while (directionFlag != 1 && directionFlag != 2) {
+            while (directionFlag != 1 && directionFlag != 2) {  //подменю выбора направления
                 printf("Before or after pointer?\n");
                 printf("1. Before\n");
                 printf("2. After\n");
                 scanf_s("%d", &directionFlag);
             }
             buffer = getchar();
-            inputElement = StringInput();
+            inputElement = StringInput();  //ввод слова
             ListAddElement(&list, inputElement, directionFlag);
             printf("Work done, press enter to return\n");
             buffer = getchar();
             break;
-        case 11:
+        case 11:  //печать предложения
             system("cls");
             if (list.head != NULL) {
                 PrintList(list);
@@ -354,13 +354,13 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
             else printf("Error, list is empty\n");
             buffer = getchar();
             break;
-        case 12:
+        case 12:  //если выбран пункт поставить указатель в конец
             system("cls");
             ListMovePointerToEnd(&list);
             printf("Work done, press enter to return\n");
             buffer = getchar();
             break;
-        case 13:
+        case 13:  //если выбран пункт проверить в начале ли указатель
             system("cls");
             if (list.head != NULL) {
                 ListCheckPointerOnStart(&list);
@@ -369,7 +369,7 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
             else printf("Error, empty list\n");
             buffer = getchar();
             break;
-        case 14:
+        case 14:  //если выбран пункт поставить указатель в конец
             system("cls");
             if (list.head != NULL) {
                 if (list.current->prevElement != NULL) {
@@ -381,7 +381,7 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
             else printf("Error, list empty");
             buffer = getchar();
             break;
-        case 15:
+        case 15:  //если выбран пункт посмотреть предыдущий элемент
             system("cls");
             if (list.head != NULL) {
                 if (list.current->prevElement != NULL) {
@@ -393,7 +393,7 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
             else printf("Error, empty list\n");
             buffer = getchar();
             break;
-        case 16:
+        case 16:  //если выбран пункт удалить предыдущий элемент
             system("cls");
             if (list.head != NULL) {
                 if (list.current->prevElement != NULL) {
@@ -405,7 +405,7 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
             else printf("Error, empty list\n");
             buffer = getchar();
             break;
-        case 17:
+        case 17:  //если выбран пункт измвлечь предыдущий элемент
             system("cls");
             if (list.head != NULL) {
                 if (list.current->prevElement != NULL) {
@@ -417,8 +417,8 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
             }
             else printf("Error, empty list\n");
             buffer = getchar();
-            break;
-        case 18:
+            break; 
+        case 18:  //есди выбран пункт изменить предыдущий элемент
             system("cls");
             if (list.head != NULL) {
                 if (list.current->prevElement != NULL) {
@@ -433,7 +433,7 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
             else printf("Error, empty list\n");
             buffer = getchar();
             break;
-        case 20:
+        case 20:  //если выбран пункт обратная печать
             system("cls");
             if (list.head != NULL) {
                 PrintListReversed(list);
@@ -442,7 +442,7 @@ listCollection ListMenu(listCollection* listPointer) {//add parameter
             else printf("Error, list is empty\n");
             buffer = getchar();
             break;
-        default:
+        default:  //если пункт выбран некорректно
             system("cls");
             break;
         }

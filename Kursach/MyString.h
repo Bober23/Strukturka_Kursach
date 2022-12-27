@@ -1,7 +1,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
-char* StringInput() {
+char* StringInput() { //функция ввода символьной строки (слова)
 	char buffer;
 	int counter = 0;
 	printf("Input your word\n");
@@ -20,7 +20,7 @@ char* StringInput() {
 	while ('\n' != getchar());  //защита от дурака
 	return string;
 }
-void StringOutput(char* string) {
+void StringOutput(char* string) {//функция вывода символьной строки (слова)
 	for (int i = 0; i < strlen(string); i++) {
 		printf("%c", string[i]);
 	}

@@ -6,31 +6,32 @@
 #include "string.h"
 #include "StringList.h"
 
-struct queueElement
+struct queueElement //структура элемента очереди
 {
-    listCollection value;
-    queueElement* nextElement = NULL;
-    queueElement* prevElement = NULL;
+    listCollection value; //значение элемента очереди
+    queueElement* nextElement = NULL;  //указатель на следующий элемент
+    queueElement* prevElement = NULL;  //указатель на предыдущий элемент
 };
-struct queueCollection {
-    queueElement* head;
-    queueElement* tail;
-    int size = 0;
+struct queueCollection { //структура очереди
+    queueElement* head; //указатель на начало очереди
+    queueElement* tail; //указатель на конец очереди
+    int size = 0; //размер очереди
 };
-void QueueDeleteAll(queueCollection* queue) {
+
+void QueueDeleteAll(queueCollection* queue) {  //Функция принимает на вход указатель на очередь, очищает очередь
     queueElement* node = queue->head;
     queueElement* badElement = node;
     while (node->nextElement != NULL)
     {
         badElement = node;
         node = node->nextElement;
-        ListDeleteAll(&badElement->value);
+        ListDeleteAll(&badElement->value);  //удаление элементов предложения внутри очереди
         free(badElement);
     }
     queue->head = NULL;
     queue->tail = NULL;
 }
-void QueueDeleteTail(queueCollection* queue) {
+void QueueDeleteTail(queueCollection* queue) {  //Функция принимает на вход указатель на очередь, удаляет первый элемент
     queueElement* node = queue->tail;
     if (queue->head != queue->tail) {
         queue->tail = queue->tail->prevElement;
@@ -40,18 +41,18 @@ void QueueDeleteTail(queueCollection* queue) {
         queue->tail = NULL;
         queue->head = NULL;
     }
-    ListDeleteAll(&node->value);
+    ListDeleteAll(&node->value);//удаление элементов предложения внутри очереди
     free(node);
 }
 
-void QueueCheckEmpty(queueCollection* queue) {
+void QueueCheckEmpty(queueCollection* queue) {  //Функция принимает на вход указатель на очередь, печатает, является ли очередь пустой
     if (queue->head == NULL && queue->tail == NULL)
         printf("Queue is empty\n");
     else if (queue->head != NULL && queue->tail != NULL)
         printf("Queue is not empty\n");
     else printf("Error!\n");
 }
-int QueueSize(queueCollection* queue) {
+int QueueSize(queueCollection* queue) { //Функция принимает на вход указатель на очередь, возвращает количество элементов очереди
     queueElement* current = queue->head;
     int counter = 0;
     while (current != NULL) {
@@ -61,22 +62,22 @@ int QueueSize(queueCollection* queue) {
     
     return counter;
 }
-void QueueAddElement(queueCollection* queue) {
-    if (queue->head == NULL) {
+void QueueAddElement(queueCollection* queue) {  //Функция принимает на вход указатель на очередь, вызывает функцию ListMenu и добавляет полученное значение в конец очереди
+    if (queue->head == NULL) {  //если очередь пуста
         struct queueElement* newElement;
-        newElement = (struct queueElement*)malloc(sizeof(struct queueElement));
+        newElement = (struct queueElement*)malloc(sizeof(struct queueElement));  //
         if (newElement == NULL) { printf("Error, NULL\n"); exit(1); }
-        newElement->value = ListMenu(NULL);
+        newElement->value = ListMenu(NULL);  //вызов меню для предложения
         newElement->prevElement = NULL;
         newElement->nextElement = NULL;
         queue->head = newElement;
         queue->tail = queue->head;
     }
-    else {
+    else {  //если очередь не пуста
         struct queueElement* newElement;
         newElement = (struct queueElement*)malloc(sizeof(struct queueElement));
         if (newElement == NULL) { printf("Error, NULL\n"); exit(1); }
-        newElement->value = ListMenu(NULL);
+        newElement->value = ListMenu(NULL);  //вызов меню для предложения
         newElement->nextElement = queue->head;
         newElement->prevElement = NULL;
         queue->head->prevElement = newElement;
@@ -84,43 +85,43 @@ void QueueAddElement(queueCollection* queue) {
     }
 }
 
-void QueueWatchTail(queueCollection* queue) {
+void QueueWatchTail(queueCollection* queue) {  //Функция принимает на вход указатель на очередь, печатает первый элемент очереди
     printf("Element: ");
-    PrintList(queue->tail->value);
+    PrintList(queue->tail->value);  //вызов функции печати предложения
 }
-void QueueInsert(queueCollection* queue) {
+void QueueInsert(queueCollection* queue) {  //Функция принимает на вход указатель на очередь, печатает значение первого элемента очереди и удаляет его
     QueueWatchTail(queue);
     QueueDeleteTail(queue);
 }
-void QueueChangeTail(queueCollection* queue) {
+void QueueChangeTail(queueCollection* queue) {  //Функция принимает на вход указатель на очередь, вызывает ListMenu для первого элемента очереди , полученным значением заменяет его
     printf("Started work with first element\n");
     queue->tail->value = ListMenu(&queue->tail->value);
 }
-void QueuePrint(queueCollection* queue) {
+void QueuePrint(queueCollection* queue) {  //Функция принимает на вход указатель на очередь, печатает ее
     queueElement* current = queue->head;
     int counter = 0;
     printf("/*| End |*\\ \n");
     while (current != NULL) {
         printf("    ");
-        PrintList(current->value);
+        PrintList(current->value);  //вызов функции печати предложения
         counter++;
         current = current->nextElement;
     }
     
     printf("/*| Start |*\\\n");
 }
-queueCollection QueueMenu(queueCollection* queuePointer) {
+queueCollection QueueMenu(queueCollection* queuePointer) { //Меню работы с очередью, принимает на вход указатель на очередь, если работает с уже созданной очередью и NULL, если очередь была только что создана. После завершения работы возвращает очередь
     int menuPointer = 0;
     int buffer;
     int isExist = 0;
     int flagCreate = 0;
     int queueSize = 0;
     struct queueCollection queue;
-    if (queuePointer != NULL) {
+    if (queuePointer != NULL) {  //если очередь уже существует
         queue = *queuePointer;
         queueSize = QueueSize(&queue);
     }
-    else {
+    else {  //если очередь не была создана
         queue.head = NULL;
         queue.tail = NULL;
         system("cls");
@@ -132,7 +133,7 @@ queueCollection QueueMenu(queueCollection* queuePointer) {
     while (menuPointer != 9) {
         menuPointer = 0;
         int directionFlag = 0;
-        system("cls");
+        system("cls");  //графический интерфейс
         printf("Queue Menu\n");
         printf("Select menu item\n");
         printf("1. Clear queue\n");
@@ -146,15 +147,15 @@ queueCollection QueueMenu(queueCollection* queuePointer) {
         printf("9. Return to sequence menu\n");
         printf("\nQueue size = %d\n",queue.size);
         printf("\nQueue contains %d elements\n", QueueSize(&queue));
-        if (QueueSize(&queue) != 0) {
+        if (QueueSize(&queue) != 0) { //печать очереди после меню
             printf("Queue:\n");
-            QueuePrint(&queue);
+            QueuePrint(&queue); 
         }
         scanf_s("%d", &menuPointer);
         buffer = getchar();//мусор
         switch (menuPointer)
         {
-        case 1:
+        case 1:  //если выбран пункт очистить очередь
             system("cls");
             if (queue.head != NULL) {
                 QueueDeleteAll(&queue);
@@ -163,16 +164,16 @@ queueCollection QueueMenu(queueCollection* queuePointer) {
             printf("Work done, press enter to return\n");
             buffer = getchar();
             break;
-        case 2:
+        case 2:  //если выбран пункт проверить пустоту очереди
             system("cls");
             QueueCheckEmpty(&queue);
             printf("Work done, press enter to return\n");
             buffer = getchar();
             break;
-        case 3:
+        case 3:  //если выбран пункт добавить элемент
             flagCreate = 0;
             if(queueSize<queue.size){
-                while (flagCreate != 1 && flagCreate != 2) {
+                while (flagCreate != 1 && flagCreate != 2) {  //подменю создания предложения
                     system("cls");
                     printf("You want to make new list and start work with it?\n");
                     printf("1. Create list and start work\n");
@@ -196,7 +197,7 @@ queueCollection QueueMenu(queueCollection* queuePointer) {
                 buffer = getchar();
             }
             break;
-        case 4:
+        case 4: //если выбран пункт извлечь первый элемент
             system("cls");
             if (queue.tail != NULL) {
                 QueueInsert(&queue);
@@ -204,7 +205,7 @@ queueCollection QueueMenu(queueCollection* queuePointer) {
             }
             else printf("Error, empty queue\n");
             buffer = getchar();
-            break;
+            break;  //если выбран пункт посмотреть первый элемент
         case 5:
             system("cls");
             if (queue.head != NULL) {
@@ -214,7 +215,7 @@ queueCollection QueueMenu(queueCollection* queuePointer) {
             else printf("Error, empty queue\n");
             buffer = getchar();
             break;
-        case 6:
+        case 6:  //если выбран пункт удалить первый элемент
             system("cls");
             if (queue.tail != NULL) {
                 QueueDeleteTail(&queue);
@@ -223,8 +224,8 @@ queueCollection QueueMenu(queueCollection* queuePointer) {
             }
             else printf("Error, empty queue\n");
             buffer = getchar();
-            break;
-        case 7:
+            break; 
+        case 7:  //если выбран пункт изменить первый элемент
             system("cls");
             if (queue.tail != NULL) {
                 QueueChangeTail(&queue);
@@ -233,7 +234,7 @@ queueCollection QueueMenu(queueCollection* queuePointer) {
             else printf("Error, empty queue\n");
             buffer = getchar();
             break;
-        case 8:
+        case 8:  //если выбран пункт напечатать очередь
             system("cls");
             if (queue.tail != NULL) {
                 QueuePrint(&queue);
@@ -242,12 +243,10 @@ queueCollection QueueMenu(queueCollection* queuePointer) {
             else printf("Error, empty queue\n");
             buffer = getchar();
             break;
-        default:
+        default:  //если неправильно введен номер пункта
             system("cls");
             break;
         }
     }
-    //if (queue.head != NULL)
-      //  QueueDeleteAll(&queue); //если выход
     return queue;
 }
